@@ -1,0 +1,55 @@
+import os
+import comtypes.client
+from pdf2docx import Converter
+
+# Convert Word to PDF
+def word_to_pdf(input_file, output_file):
+    # Ensure input is a Word file
+    if not input_file.endswith(".docx"):
+        raise ValueError("Input file must be a .docx file")
+
+    # Ensure output is a PDF file
+    if not output_file.endswith(".pdf"):
+        output_file += ".pdf"
+
+    # Start the Word application
+    word = comtypes.client.CreateObject('Word.Application')
+    word.Visible = False  # Hide the Word window
+
+    # Open the Word file
+    doc = word.Documents.Open(os.path.abspath(input_file))
+
+    # Save as PDF
+    doc.SaveAs(os.path.abspath(output_file), FileFormat=17)
+    doc.Close()  # Close the document
+    word.Quit()  # Quit Word
+
+    print(f"Successfully converted {input_file} to {output_file}")
+
+# Convert PDF to Word
+def pdf_to_word(input_file, output_file):
+    # Ensure input is a PDF file
+    if not input_file.endswith(".pdf"):
+        raise ValueError("Input file must be a .pdf file")
+
+    # Ensure output is a Word file
+    if not output_file.endswith(".docx"):
+        output_file += ".docx"
+
+    # Convert PDF to Word using pdf2docx
+    cv = Converter(input_file)
+    cv.convert(output_file)  # Convert PDF to DOCX
+    cv.close()
+
+    print(f"Successfully converted {input_file} to {output_file}")
+
+# Example usage:
+# Convert Word to PDF
+# input_file = "example.docx"  # Replace with your Word file
+# output_file = "output.pdf"   # Replace with desired PDF output
+# word_to_pdf(input_file, output_file)
+
+# Convert PDF to Word
+input_file = "example.pdf"  # Replace with your PDF file
+output_file = "output.docx"  # Replace with desired Word output
+pdf_to_word(input_file, output_file)
